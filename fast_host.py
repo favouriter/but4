@@ -72,7 +72,7 @@ async def check_domains(addresses):
     for addr in addresses:
         fast_ips.append(await get_fast(addr[0], port=addr[1]))
         await asyncio.sleep(1)
-    with open('fast_host.txt', 'w', encoding='utf-8') as f:
+    with open('./out/fast_host.txt', 'w', encoding='utf-8') as f:
         for addr in fast_ips:
             if addr[1] is None: continue
             foramt_host = f'{addr[1]:<25}{addr[0]}\n'

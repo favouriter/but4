@@ -51,7 +51,7 @@ if __name__ == '__main__':
     batch = 40
     ip_a, ip_b, port_a, port_b = '192.168.0.2', '192.168.0.255', 80, 81
     it = address_generater(ip_a, ip_b, port_a, port_b)
-    with open('ips.txt', 'w+', encoding='utf-8') as f:
+    with open('./out/ips.txt', 'w+', encoding='utf-8') as f:
         tasks = [batch_press(it, f) for i in range(batch)]
         loop = asyncio.get_event_loop()
         loop.run_until_complete(asyncio.gather(*tasks))
