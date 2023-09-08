@@ -16,17 +16,27 @@ def ip_num2str(ip: int):
     ipstr.reverse()
     return '.'.join(ipstr)
 
-# 迭代生成器
-def address_generater(ip_a, ip_b, port_a, port_b):
+# ip生成器
+def ip_generater(ip_a, ip_b):
     a, b = ip_str2num(ip_a), ip_str2num(ip_b)
+    a, b = sorted([a, b])
     for ip in range(a,b):
-        ipstr =ip_num2str(ip)
-        for port in range(port_a, port_b):
-            yield ipstr, port
+        yield ip_num2str(ip)
 
+# 端口生成器
+def port_generater(port_a, port_b):
+    port_a, port_b  = sorted([port_a, port_b])
+    for port in range(port_a, port_b):
+        yield port
+
+# 地址生成器
+def address_generater(ips, ports):
+    for ip in ips:
+        for port in ports:
+            yield ip, port
 
 # 验证地址
-async def test_socket(ip, port, f, openweb=False, timeout = 1):
+async def test_socket(ip, port, f, do=None, timeout = 1):
     print(f'{ip}:{port}')
     try:
         t = asyncio.open_connection(ip,port)
@@ -34,29 +44,33 @@ async def test_socket(ip, port, f, openweb=False, timeout = 1):
         writer.close()
         await writer.wait_closed()
         if f: f.write(f'{ip}:{port}\n')
-        if openweb:
-            try:
-                opt = 'start' if os.name == 'nt' else 'open'
-                os.system(f'{opt} http://{ip}:{port}')
-            except: pass
+        if do is not None: asyncio.create_task(do(ip, port))
         return ip, port
     except: return None,None
 
+# 动作，打开web浏览器
+async def openweb(ip, port):
+    try:
+        opt = 'start' if os.name == 'nt' else 'open'
+        os.system(f'{opt} http://{ip}:{port}')
+    except: pass
+
 # 批处理器
-async def batch_press(it,f):
+async def batch_press(it,f, do):
     for ip, port in it:
-        await test_socket(ip, port, f, openweb=True)
+        await test_socket(ip, port, f, do)
 
 if __name__ == '__main__':
-    batch = 40
-    ip_a, ip_b, port_a, port_b = '192.168.0.2', '192.168.0.255', 80, 81
-    it = address_generater(ip_a, ip_b, port_a, port_b)
-    with open('./out/ips.txt', 'w+', encoding='utf-8') as f:
-        tasks = [batch_press(it, f) for i in range(batch)]
+    batch = 400
+    ips = ip_generater('192.168.3.2', '192.168.3.255')
+    # ports = port_generater(20,65535)
+    ports = [80]
+
+    # 传入IP和端口生成器
+    it = address_generater(ips, ports)
+    with open('ips.txt', 'w+', encoding='utf-8') as f:
+        # 批量检测，检测端口为打开状态，动作为打开web浏览器
+        tasks = [batch_press(it, f, openweb) for i in range(batch)]
         loop = asyncio.get_event_loop()
         loop.run_until_complete(asyncio.gather(*tasks))
-
-
-
-
 
