@@ -18,3 +18,13 @@ ports = [80,443,8080]
 # 比如openweb(打开浏览器)，也可以自定义其他的动作
 batch_press(it, f, openweb)
 ```
+
+## clean_mate.py
+可以用于清理图片中的头信息，减小图片体积，去除隐私信息，比如拍照时的时间、地点
+```python
+# 默认清理当前目录下的所以png
+python clean_mate.py
+
+# 也可以清理指定目录
+python clean_mate.py --path ./images/
+```
