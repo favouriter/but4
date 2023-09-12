@@ -39,7 +39,7 @@ ports = port_generater(20,65535)
 ports = [80,443,8080]
 # batch_press中do为一个异步方法，用于检测端口处于打开状态后执行的动作
 # 比如openweb(打开浏览器)，也可以自定义其他的动作
-batch_press(it, f, openweb)
+batch_press(it, f, checkout_web)
 ```
 
 ## clean_mate.py
