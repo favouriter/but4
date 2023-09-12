@@ -1,4 +1,4 @@
-import asyncio, os
+import asyncio, os, aiohttp
 
 # IP字符串转数字
 def ip_str2num(ip:str):
@@ -15,6 +15,12 @@ def ip_num2str(ip: int):
         ip = ip >> 8
     ipstr.reverse()
     return '.'.join(ipstr)
+
+# 多批IP端生成器
+def ips_generater(*args):
+    for a, b in args:
+        for ip in ip_generater(a,b):
+            yield ip
 
 # ip生成器
 def ip_generater(ip_a, ip_b):
@@ -55,6 +61,21 @@ async def openweb(ip, port):
         os.system(f'{opt} http://{ip}:{port}')
     except: pass
 
+global session
+session = None
+
+# 检测打开web
+async def checkout_web(ip, port):
+    try:
+        global session
+        session = session or aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False))
+        print(session)
+        async with session.get(f'http://{ip}:{port}') as response:
+            if response.status < 500: await openweb(ip, port)
+    except Exception as e:
+        print(str(e))
+        pass
+
 # 批处理器
 async def batch_press(it,f, do):
     for ip, port in it:
@@ -62,7 +83,8 @@ async def batch_press(it,f, do):
 
 if __name__ == '__main__':
     batch = 400
-    ips = ip_generater('192.168.3.2', '192.168.3.255')
+    # ips = ip_generater('192.168.3.2', '192.168.3.255')
+    ips = ips_generater(('192.168.0.2','192.168.0.254'),('192.168.3.2', '192.168.3.255'))
     # ports = port_generater(20,65535)
     ports = [80]
 
@@ -70,7 +92,7 @@ if __name__ == '__main__':
     it = address_generater(ips, ports)
     with open('ips.txt', 'w+', encoding='utf-8') as f:
         # 批量检测，检测端口为打开状态，动作为打开web浏览器
-        tasks = [batch_press(it, f, openweb) for i in range(batch)]
+        tasks = [batch_press(it, f, checkout_web) for i in range(batch)]
         loop = asyncio.get_event_loop()
         loop.run_until_complete(asyncio.gather(*tasks))
 
