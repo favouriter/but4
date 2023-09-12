@@ -30,8 +30,9 @@ python fast_host.py
 dhcp分配IP很有可能找不到局域网内的测试设备地址，可以划定IP范围及端口范围，扫描出局域网的服务器，
 ```python
 # address_generater传入两个参数，分别为ips, ports
-# ips可以为一下两种写法
+# ips可以为一下三种写法,ip_generater为一段IP，ips_generater为多段IP，也可以直接用list
 ips = ip_generater('192.168.3.2', '192.168.3.255')
+ips = ips_generater(('192.168.0.2','192.168.0.254'),('192.168.3.2', '192.168.3.255'))
 ips = ('192.168.3.2', '192.168.3.255')
 # ports也可以为以下两种写法
 ports = port_generater(20,65535)
