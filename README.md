@@ -51,3 +51,24 @@ python clean_mate.py
 # 也可以清理指定目录
 python clean_mate.py --path ./images/
 ```
+
+## redisdict.py
+```python
+# 在多台服务器中共享动态变量，如果一台服务器修改变量，其他服务器也会同步更新
+# 服务器01
+config = RedisDict(refix, redis_conn)
+# 用户001登录成功设置token
+config.update({'user_001_token':'001'})
+
+# 服务器02
+config = RedisDict(refix, redis_conn)
+config.get('user_001_token')
+# 001
+```
+
+## gitpull.py
+```python
+# 我们在github上保存大量项目，比如stable-diffusion-webui也用git同步扩展插件，这种情况都是在一个目录下，对下级目录进行git pull拉去代码操作
+# 这个时候可以用这个脚本逐个目录执行git pull
+> python gitpull.py
+```
