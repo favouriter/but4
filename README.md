@@ -72,3 +72,5 @@ config.get('user_001_token')
 # 这个时候可以用这个脚本逐个目录执行git pull
 > python gitpull.py
 ```
+
+[![Star History Chart](https://api.star-history.com/svg?repos=favouriter/but4&type=Date)](https://star-history.com/#favouriter/but4&Date)
