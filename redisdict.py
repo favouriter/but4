@@ -69,5 +69,7 @@ class RedisDict(dict):
         channel = self.redis_conn.psubscribe(self.prefix)
         async for msg in channel.iter():
             msg_dict = json.loads(msg)
-            self.update(msg_dict)
+            for key, value in msg_dict.items:
+                if key in self:
+                    self.update({key: value})
 
