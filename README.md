@@ -54,7 +54,7 @@ python clean_mate.py --path ./images/
 
 ## 4、redisdict.py
 ```python
-# 在多台服务器中共享动态变量，如果一台服务器修改变量，其他服务器也会同步更新
+# 在多台服务器中共享动态变量，如果一台服务器修改变量，其他服务器也会同步更新，减少频繁读取redis，获取指定Key时，如果本地字典不存在，则从redis远程读取，如果远程redis的值被其他主机修改，自动发送广播，其他主机同步该值，开发者使用时只需考虑get、set即可，各服务器之间会自动同步
 # 服务器01
 config = RedisDict(refix, redis_conn)
 # 用户001登录成功设置token
