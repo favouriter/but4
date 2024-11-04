@@ -1,7 +1,7 @@
 # but4
 收藏一些自己平时用的脚本，but4是beautiful的意思
 
-## fast_host.py
+## 1、fast_host.py
 平时访问github和huggingface非常头疼，写个脚本通过各方DNS服务器汇总分析，检测出TCP打开到关闭耗时最短的IP
 ```python
 # scan_dns.py 中 addresses配置了域名和开放的端口，用于检测打开到关闭的耗时
@@ -26,7 +26,7 @@ python fast_host.py
 
 ```
 
-## scan_server.py
+## 2、scan_server.py
 dhcp分配IP很有可能找不到局域网内的测试设备地址，可以划定IP范围及端口范围，扫描出局域网的服务器，
 ```python
 # address_generater传入两个参数，分别为ips, ports
@@ -42,7 +42,7 @@ ports = [80,443,8080]
 batch_press(it, f, checkout_web)
 ```
 
-## clean_mate.py
+## 3、clean_mate.py
 可以用于清理图片中的头信息，减小图片体积，去除隐私信息，比如拍照时的时间、地点
 ```python
 # 默认清理当前目录下的所以png
@@ -52,7 +52,7 @@ python clean_mate.py
 python clean_mate.py --path ./images/
 ```
 
-## redisdict.py
+## 4、redisdict.py
 ```python
 # 在多台服务器中共享动态变量，如果一台服务器修改变量，其他服务器也会同步更新
 # 服务器01
@@ -66,11 +66,17 @@ config.get('user_001_token')
 # 001
 ```
 
-## gitpull.py
+## 5、gitpull.py
 ```python
 # 我们在github上保存大量项目，比如stable-diffusion-webui也用git同步扩展插件，这种情况都是在一个目录下，对下级目录进行git pull拉去代码操作
 # 这个时候可以用这个脚本逐个目录执行git pull
 > python gitpull.py
+```
+
+## 6、selfssl.py
+```python
+# 自签证书脚本，如果没有根证书，则先创建根证书，如果有根证书，可以用该证书创建无数多个域名证书，客户端只需要安装根证书即可(将根证书添加到受信任的根证书机构)，这样该根证书生成的所有域名证书都可以用，时间可以自定义，五十年一百年随便
+python selfssl.py XXXX.com.cn # 创建一个域名证书一百年后过期
 ```
 
 [![Star History Chart](https://api.star-history.com/svg?repos=favouriter/but4&type=Date)](https://star-history.com/#favouriter/but4&Date)
