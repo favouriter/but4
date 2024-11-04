@@ -23,9 +23,10 @@ class RedisDict(dict):
             asyncio.create_task(self.save2redis(k,v))
 
     # 修改配置，同步到redis
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value, from_redis=False):
         super().__setitem__(key, value)
-        asyncio.create_task(self.save2redis(k,v))
+        if not from_redis:
+            asyncio.create_task(self.save2redis(key, value))
 
     # 从远程获取数据
     async def read_redis(self, key):
@@ -71,5 +72,6 @@ class RedisDict(dict):
             msg_dict = json.loads(msg)
             for key, value in msg_dict.items:
                 if key in self:
-                    self.update({key: value})
+                    self.__setitem__(key, value, from_redis=True)
+                    # self.update({key: value})
 
